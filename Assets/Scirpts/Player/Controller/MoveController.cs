@@ -27,7 +27,17 @@ public class MoveController : NetworkBehaviour
 
     public MovementState State;
     public CollisionFlags CollisionFlags;
-    public bool isJump;     // 是否已经处于跳跃状态
+
+    /// <summary>
+    /// 跳跃相关
+    /// </summary>
+    /// 用于手感调优，部分情况下检测条件过于苛刻，使用定时器完成延迟跳跃。
+    [Header("跳跃")]
+    [Tooltip("跳跃缓冲时间")] public float jumpBufferTime = 0.2f;
+    [Tooltip("定时器")] public float jumpBufferTimer = 0f;
+    [Tooltip("检测跳跃缓冲存在")] public bool isJump;     // 是否已经处于跳跃状态
+
+
     public bool isGround;    // 当前停留在地面上
     public float jumpForce;    // 跳跃上升
     public float falllForce;    // 跳跃上升
@@ -100,10 +110,26 @@ public class MoveController : NetworkBehaviour
 
     public void PlayerJump()
     {
-        bool isJumpDown = Input.GetKeyDown(JumpInputName);
-        if (isJumpDown && isGround )
+        if (Input.GetKeyDown(JumpInputName))
         {
-            stateMachine.ChangeState(jumpState);
+            jumpBufferTimer = jumpBufferTime;
+            isJump = true;
+        }
+        
+        if (isJump )
+        {
+            jumpBufferTimer -= Time.deltaTime;
+
+            if(jumpBufferTimer <= 0.0f || isGround)
+            {
+                if(isGround)
+                {
+                    stateMachine.ChangeState(jumpState);
+                }
+
+                isJump = false;
+            }
+
         }
 
         if(!isGround)
@@ -134,6 +160,7 @@ public class MoveController : NetworkBehaviour
         if(stateMachine.IsState(jumpState) && isGround)
         {
             stateMachine.ChangeState(idleState);
+            isJump = false;
         }
     }
 
