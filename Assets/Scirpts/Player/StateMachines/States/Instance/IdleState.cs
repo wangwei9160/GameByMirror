@@ -13,17 +13,17 @@ public class IdleState : IState
         }
         moveController.Speed = 0f;
         moveController.falllForce = 20f; // œ¬¬‰ÀŸ∂»
-        moveController.jumpForce = 10f;
+        //moveController.jumpForce = 10f;
         //moveController.isGround = true;
     }
 
     public override void OnUpdate()
     {
-        base.OnUpdate();
+        //base.OnUpdate();
     }
 
     public override void OnExit()
     {
-        base.OnExit();
+        //base.OnExit();
     }
 }

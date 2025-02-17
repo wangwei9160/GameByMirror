@@ -883,7 +883,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 1
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -5766,7 +5766,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 1
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -10750,7 +10750,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 1
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -14893,6 +14893,7 @@ MonoBehaviour:
   jumpBufferTime: 0.2
   jumpBufferTimer: 0
   isJump: 0
+  isShoot: 0
   isGround: 0
   jumpForce: 0
   falllForce: 0
@@ -14900,6 +14901,7 @@ MonoBehaviour:
   walkInputName: 304
   duckInputName: 306
   JumpInputName: 32
+  reloadInputName: 114
   VfXs: []
 --- !u!143 &7055051958049094398
 CharacterController:
@@ -15028,6 +15030,7 @@ MonoBehaviour:
   syncInterval: 0
   mouseSensitivity: 200
   player: {fileID: 0}
+  bullet: {fileID: 0}
 --- !u!1 &8020474714850321057
 GameObject:
   m_ObjectHideFlags: 0
@@ -16792,6 +16795,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8020474714849836915}
   - component: {fileID: 8020474714728759542}
+  - component: {fileID: 2560994294845338664}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -16842,6 +16846,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2560994294845338664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8020474714850321235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  clientAuthority: 1
+  animator: {fileID: 8020474714728759542}
 --- !u!1 &8020474714850321237
 GameObject:
   m_ObjectHideFlags: 0
@@ -17774,17 +17795,17 @@ PrefabInstance:
     - target: {fileID: 1487384403502865975, guid: d4961ef13d1433047aefcd0635720068,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.355
+      value: 0.28
       objectReference: {fileID: 0}
     - target: {fileID: 1487384403502865975, guid: d4961ef13d1433047aefcd0635720068,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.43
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 1487384403502865975, guid: d4961ef13d1433047aefcd0635720068,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.1
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 1487384403502865975, guid: d4961ef13d1433047aefcd0635720068,
         type: 3}

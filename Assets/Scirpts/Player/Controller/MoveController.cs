@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security;
+using System.Xml;
 using Mirror;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -28,6 +29,13 @@ public class MoveController : NetworkBehaviour
     public MovementState State;
     public CollisionFlags CollisionFlags;
 
+    private PlayerInfo playerInfo;
+    public PlayerInfo PlayerInfo
+    {
+        get { return playerInfo; }
+        set { playerInfo = value; EventCenter.Broadcast(EventDefine.OnPlayerInfoChange , playerInfo); }
+    }
+
     /// <summary>
     /// 跳跃相关
     /// </summary>
@@ -37,7 +45,7 @@ public class MoveController : NetworkBehaviour
     [Tooltip("定时器")] public float jumpBufferTimer = 0f;
     [Tooltip("检测跳跃缓冲存在")] public bool isJump;     // 是否已经处于跳跃状态
 
-
+    public bool isShoot;
     public bool isGround;    // 当前停留在地面上
     public float jumpForce;    // 跳跃上升
     public float falllForce;    // 跳跃上升
@@ -49,11 +57,14 @@ public class MoveController : NetworkBehaviour
     public RunState runState;
     public JumpState jumpState;
     public DuckState duckState;
+    public SingleShootState singleShootState;
+    public ReloadState reloadState;
 
     [Header("键位")]
     [Tooltip("静步")] public KeyCode walkInputName = KeyCode.LeftShift;
     [Tooltip("下蹲")] public KeyCode duckInputName = KeyCode.LeftControl;
     [Tooltip("跳跃")] public KeyCode JumpInputName = KeyCode.Space;
+    [Tooltip("换弹")] public KeyCode reloadInputName = KeyCode.R;
 
     //public Transform MuzzleFlash;
     public ParticleSystem[] VfXs;
@@ -66,37 +77,29 @@ public class MoveController : NetworkBehaviour
         VfXs = transform.Find("MuzzleFlash").GetComponentsInChildren<ParticleSystem>();
 
         //animator = transform.Find("Player").GetComponent<Animator>();
-        isJump = false;
-        isGround = true;
-        CollisionFlags = CollisionFlags.Below;
+        
         idleState = new IdleState(this , new string[] { "Idle_gunMiddle_AR" } , 0.2f);
         walkState = new WalkState(this , new string[] { "WalkFront_Shoot_AR" , "WalkBack_Shoot_AR" , "WalkRight_Shoot_AR" , "WalkLeft_Shoot_AR" }, 0.2f);
         runState = new RunState(this, new string[] { "Run_guard_AR" }, 0.2f);
         jumpState = new JumpState(this, new string[] { "Jump" }, 0.2f);
         duckState = new DuckState(this, new string[] { "Idle_Ducking_AR" }, 0.2f);
+        singleShootState = new SingleShootState(this , new string[] {"Shoot_SingleShot_AR"}, 0.2f);
+        reloadState = new ReloadState(this , new string[] { "Reload" } , 0.2f);
         stateMachine = new StateMachine(idleState);
+    }
+
+    private void Start()
+    {
+        isShoot = false;
+        isJump = false;
+        isGround = true;
+        CollisionFlags = CollisionFlags.Below;
+        PlayerInfo = new PlayerInfo();
     }
 
     void Update()
     {
         if (!isLocalPlayer) { return; }
-
-        if(Input.GetMouseButtonDown(0))
-        {
-            Debug.Log("按下了左键");
-            foreach (ParticleSystem item in VfXs)
-            {
-                item.Play();
-            }
-        }
-        if(Input.GetMouseButton(0))
-        {
-            Debug.Log("持续按下鼠标左键");
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            Debug.Log("抬起了鼠标左键");
-        }
 
         // [-1,1] 
         //float moveForward = Input.GetAxis("Vertical") ;
@@ -104,8 +107,47 @@ public class MoveController : NetworkBehaviour
         // -1 0 1
         float moveForward = Input.GetAxisRaw("Vertical");
         float moveRight = Input.GetAxisRaw("Horizontal");
+        PlayerShoot();
         PlayerJump();
         PlayerMove( moveForward, moveRight);
+        stateMachine.OnUpdate();
+    }
+
+    public void PlayerShoot()
+    {
+        if (Input.GetKeyDown(reloadInputName))
+        {
+            stateMachine.ChangeState(reloadState);
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("按下了左键");
+            if(playerInfo.CurrentBullet > 0) stateMachine.ChangeState(singleShootState);
+            else stateMachine.ChangeState(reloadState);
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            Debug.Log("按下了右键");
+            playerInfo.FireMode = 1 - playerInfo.FireMode;
+            EventCenter.Broadcast(EventDefine.OnPlayerInfoChange,playerInfo);
+        }
+
+
+        //if(Input.GetMouseButton(0))
+        //{
+        //    Debug.Log("持续按下鼠标左键");
+        //}
+        if (Input.GetMouseButtonUp(0))
+        {
+            Debug.Log("抬起了鼠标左键");
+            isShoot = false;
+        }
+
+        if (!isShoot && (stateMachine.IsState(singleShootState) || stateMachine.IsState(reloadState)))
+        {
+            stateMachine.ChangeState(idleState);
+        }
     }
 
     public void PlayerJump()
@@ -191,7 +233,7 @@ public class MoveController : NetworkBehaviour
                 stateMachine.ChangeState(duckState);
             }else
             {   
-                if(!isJump) stateMachine.ChangeState(idleState);
+                if(!isJump && !isShoot) stateMachine.ChangeState(idleState);
             }
         }
 
@@ -222,7 +264,7 @@ public class MoveController : NetworkBehaviour
             isGround = true;
             characterController.Move(new Vector3(0, Time.deltaTime, 0));
         }
-        else if(isGround && CollisionFlags == CollisionFlags.None)
+        else if(isGround && !isShoot && CollisionFlags == CollisionFlags.None)
         {
             isGround = false;
             jumpForce = 0;

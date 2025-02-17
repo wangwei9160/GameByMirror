@@ -10,9 +10,10 @@ public class IState
         "WalkState",
         "DuckState",
         "RunState",
-        "SingleShotState",
-        "BurstShotState",
-        "AutoShotState",
+        "SingleShootState",
+        "BurstShootState",
+        "AutoShootState",
+        "ReloadState",
         "SendMessageState",
     };
     public string name
@@ -45,7 +46,7 @@ public class IState
 
     public virtual void OnUpdate()
     {
-        Debug.Log("OnUpdate " + name);
+        //Debug.Log("OnUpdate " + name);
     }
 
     public virtual void OnExit()

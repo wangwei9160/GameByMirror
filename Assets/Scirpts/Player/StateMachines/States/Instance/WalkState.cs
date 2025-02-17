@@ -7,7 +7,7 @@ public class WalkState : IState
     public override void OnEnter()
     {
         base.OnEnter();
-        moveController.State = MovementState.idle;
+        moveController.State = MovementState.walking;
         animator.CrossFade(animation[moveController.fx], crossfade);
         moveController.Speed = walkSpeed;
     }
