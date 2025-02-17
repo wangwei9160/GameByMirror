@@ -15,8 +15,8 @@ public class PlayerInfo
     {
         Health = 100;
         Armor = 0;
-        CurrentBullet = 100;
-        MoreBullet = 100;
+        CurrentBullet = 30;
+        MoreBullet = 30;
         FireMode = 0;
     }
 

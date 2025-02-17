@@ -45,6 +45,7 @@ public class MoveController : NetworkBehaviour
     [Tooltip("定时器")] public float jumpBufferTimer = 0f;
     [Tooltip("检测跳跃缓冲存在")] public bool isJump;     // 是否已经处于跳跃状态
 
+    public bool isNeedReload;   // 需要换弹
     public bool isShoot;
     public bool isGround;    // 当前停留在地面上
     public float jumpForce;    // 跳跃上升
@@ -124,7 +125,7 @@ public class MoveController : NetworkBehaviour
         {
             Debug.Log("按下了左键");
             if(playerInfo.CurrentBullet > 0) stateMachine.ChangeState(singleShootState);
-            else stateMachine.ChangeState(reloadState);
+            else { isNeedReload = true; stateMachine.ChangeState(reloadState); }
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -144,7 +145,7 @@ public class MoveController : NetworkBehaviour
             isShoot = false;
         }
 
-        if (!isShoot && (stateMachine.IsState(singleShootState) || stateMachine.IsState(reloadState)))
+        if (!isShoot && !isNeedReload && (stateMachine.IsState(singleShootState) || stateMachine.IsState(reloadState)))
         {
             stateMachine.ChangeState(idleState);
         }
@@ -233,7 +234,7 @@ public class MoveController : NetworkBehaviour
                 stateMachine.ChangeState(duckState);
             }else
             {   
-                if(!isJump && !isShoot) stateMachine.ChangeState(idleState);
+                if(!isJump && !isShoot && !isNeedReload) stateMachine.ChangeState(idleState);
             }
         }
 

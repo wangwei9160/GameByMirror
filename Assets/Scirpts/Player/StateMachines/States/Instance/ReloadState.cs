@@ -28,6 +28,7 @@ public class ReloadState : IState
         {
             isReload = true;
             moveController.PlayerInfo.CurrentBullet = moveController.PlayerInfo.MoreBullet;
+            moveController.isNeedReload = false;
             EventCenter.Broadcast(EventDefine.OnPlayerInfoChange , moveController.PlayerInfo);
         }
     }

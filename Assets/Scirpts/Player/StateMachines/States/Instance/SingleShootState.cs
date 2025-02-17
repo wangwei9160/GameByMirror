@@ -23,7 +23,32 @@ public class SingleShootState : IState
         {
             item.Play();
         }
+        OnShoot();
         Timer = ShootBufferTime;
+    }
+
+    public void OnShoot()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray ,out hit))
+        {
+            string hitTag = hit.collider.tag;
+            //Debug.Log(hitTag);
+            if (hitTag == "Head")
+            {
+                Debug.Log("命中头部！伤害: " );
+            }
+            else if (hitTag == "Body")
+            {
+                Debug.Log("命中身体！伤害: ");
+            }
+            else if (hitTag == "Leg")
+            {
+                Debug.Log("命中腿部！伤害: ");
+            }
+        }
     }
 
     public override void OnUpdate()

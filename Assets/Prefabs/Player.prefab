@@ -14893,6 +14893,7 @@ MonoBehaviour:
   jumpBufferTime: 0.2
   jumpBufferTimer: 0
   isJump: 0
+  isNeedReload: 0
   isShoot: 0
   isGround: 0
   jumpForce: 0
@@ -15692,7 +15693,7 @@ GameObject:
   - component: {fileID: 8020474714847145495}
   m_Layer: 0
   m_Name: Body1
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17129,7 +17130,7 @@ GameObject:
   - component: {fileID: 8020474714847145499}
   m_Layer: 0
   m_Name: Leg1
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17430,7 +17431,7 @@ GameObject:
   - component: {fileID: 8020474714847145497}
   m_Layer: 0
   m_Name: head1
-  m_TagString: Untagged
+  m_TagString: Head
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17846,6 +17847,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MuzzleFlash
+      objectReference: {fileID: 0}
+    - target: {fileID: 4565786832843128832, guid: d4961ef13d1433047aefcd0635720068,
+        type: 3}
+      propertyPath: lengthInSec
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4565786832843128832, guid: d4961ef13d1433047aefcd0635720068,
+        type: 3}
+      propertyPath: RotationModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4565786832843128832, guid: d4961ef13d1433047aefcd0635720068,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4565786832843128832, guid: d4961ef13d1433047aefcd0635720068,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

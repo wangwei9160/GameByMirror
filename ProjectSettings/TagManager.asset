@@ -9,13 +9,9 @@ TagManager:
   - Blood
   - Dirt
   - Concrete
-  - ExplosiveBarrel
-  - Target
-  - GasTank
-  - Metal (Static)
-  - Wood (Static)
-  - Dirt (Static)
-  - Wood
+  - Head
+  - Body
+  - Leg
   layers:
   - Default
   - TransparentFX
